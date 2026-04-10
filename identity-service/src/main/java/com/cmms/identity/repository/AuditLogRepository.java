@@ -1,0 +1,19 @@
+package com.cmms.identity.repository;
+
+import com.cmms.identity.entity.AuditLog;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface AuditLogRepository extends JpaRepository<AuditLog, Integer> {
+
+    @Query("SELECT a FROM AuditLog a ORDER BY a.createdAt DESC")
+    List<AuditLog> findRecentLogs();
+
+    @Query("SELECT a FROM AuditLog a WHERE a.actionType IN (:securityActions) ORDER BY a.createdAt DESC")
+    List<AuditLog> findSecurityLogs(@Param("securityActions") List<String> securityActions);
+}
